@@ -219,7 +219,7 @@ int error( char * msg, int lineNo, int instNo)
 
 /********************************************/
 int readInstructions (void)
-{ OPCODE op;
+{ int op;
   int arg1, arg2, arg3;
   int loc, regNo, lineNo;
   for (regNo = 0 ; regNo < NO_REGS ; regNo++)

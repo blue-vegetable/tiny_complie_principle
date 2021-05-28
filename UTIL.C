@@ -98,7 +98,7 @@ char * copyString(char * s)
   char * t;
   if (s==NULL) return NULL;
   n = strlen(s)+1;
-  t = malloc(n);
+  t = (char*)malloc(n);
   if (t==NULL)
     fprintf(listing,"Out of memory error at line %d\n",lineno);
   else strcpy(t,s);
@@ -108,7 +108,7 @@ char * copyString(char * s)
 /* Variable indentno is used by printTree to
  * store current number of spaces to indent
  */
-static indentno = 0;
+static int indentno = 0;
 
 /* macros to increase/decrease indentation */
 #define INDENT indentno+=2

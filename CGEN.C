@@ -194,7 +194,7 @@ static void cGen( TreeNode * tree)
  * file name as a comment in the code file
  */
 void codeGen(TreeNode * syntaxTree, char * codefile)
-{  char * s = malloc(strlen(codefile)+7);
+{  char * s = (char * )malloc(strlen(codefile)+7);
    strcpy(s,"File: ");
    strcat(s,codefile);
    emitComment("TINY Compilation to TM Code");
