@@ -21,10 +21,7 @@ void printToken( TokenType token, const char* tokenString )
     case REPEAT:
     case UNTIL:
     case READ:
-    case WRITE:
-      fprintf(listing,
-         "reserved word: %s\n",tokenString);
-      break;
+    case WRITE: fprintf(listing, "reserved word: %s\n",tokenString); break;
     case ASSIGN: fprintf(listing,":=\n"); break;
     case LT: fprintf(listing,"<\n"); break;
     case EQ: fprintf(listing,"=\n"); break;
@@ -48,6 +45,8 @@ void printToken( TokenType token, const char* tokenString )
       fprintf(listing,
           "ERROR: %s\n",tokenString);
       break;
+    case INT: fprintf(listing,"int\n");break;
+    case CHAR: fprintf(listing,"char\n");break;
     default: /* should never happen */
       fprintf(listing,"Unknown token: %d\n",token);
   }
