@@ -40,8 +40,7 @@ static void traverse( TreeNode * t,
  * traversals from traverse
  */
 static void nullProc(TreeNode * t)
-{ if (t==NULL) return;
-  else return;
+{ return;
 }
 
 /* Procedure insertNode inserts 
@@ -154,7 +153,7 @@ static void checkNode(TreeNode * t)
     case StmtK:
       switch (t->kind.stmt)
       { case IfK:
-          if (t->child[0]->type == Integer)
+          if (t->child[0]->type != Boolean)
             typeError(t->child[0],"if test is not Boolean");
           break;
         case AssignK:

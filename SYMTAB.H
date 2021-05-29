@@ -23,7 +23,7 @@ int st_lookup ( char * name);
 
 /* Function get_tpye returns the type 
  */
-int get_type(TokenType * type);
+int get_type(char * type);
 
 /* Procedure printSymTab prints a formatted 
  * listing of the symbol table contents 

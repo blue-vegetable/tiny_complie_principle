@@ -37,7 +37,7 @@ static void syntaxError(char * message)
 static void match(TokenType expected)
 { if (token == expected) token = getToken();
   else {
-    syntaxError("(in match)unexpected token -> ");
+    syntaxError("unexpected token -> ");
     printToken(token,tokenString);
     fprintf(listing,"      ");
   }
@@ -71,7 +71,7 @@ TreeNode * statement(void)
     case ID : t = assign_stmt(); break;
     case READ : t = read_stmt(); break;
     case WRITE : t = write_stmt(); break;
-    // case ENDFILE: puts("here is end");break;
+    case ENDFILE: break;
     default : syntaxError("(in stmt)unexpected token -> ");
               printToken(token,tokenString);
               token = getToken();
@@ -129,12 +129,14 @@ TreeNode *declaration(void){
 			t = newStmtNode(IntK) ;
 			match(INT);
 			t->attr.name= copyString(tokenString);
+			t->type=Integer;
 			match(ID);
 			break;
 		case CHAR:
 			t = newStmtNode(CharK);
 			match(CHAR);
 			t->attr.name= copyString(tokenString);
+			t->type = Character;
 			match(ID);
 			break; 
 		default:

@@ -26,8 +26,8 @@ static void genStmt( TreeNode * tree)
 { TreeNode * p1, * p2, * p3;
   int savedLoc1,savedLoc2,currentLoc;
   int loc;
+  int temp;
   switch (tree->kind.stmt) {
-
       case IfK :
          if (TraceCode) emitComment("-> if") ;
          p1 = tree->child[0] ;
@@ -78,11 +78,17 @@ static void genStmt( TreeNode * tree)
          if (TraceCode)  emitComment("<- assign") ;
          break; /* assign_k */
 
-      case ReadK:
-         emitRO("IN",ac,0,0,"read integer value");
+      case ReadK:     
+	  	 temp = get_type(tree->attr.name); 		 
+    	 if( temp == INT){
+    	 	emitRO("IN",ac,0,0,"read integer value");
+		 } else if(temp==CHAR){
+		 	emitRO("INC",ac,0,0,"read integer value");
+		 }    
          loc = st_lookup(tree->attr.name);
          emitRM("ST",ac,loc,gp,"read: store value");
          break;
+         
       case WriteK:
          /* generate code for expression to write */
          cGen(tree->child[0]);
@@ -187,7 +193,7 @@ static void cGen( TreeNode * tree)
 /**********************************************/
 /* the primary function of the code generator */
 /**********************************************/
-/* Procedure codeGen generates code to a code
+/* Procedure codeG2en generates code to a code
  * file by traversal of the syntax tree. The
  * second parameter (codefile) is the file name
  * of the code file, and is used to print the

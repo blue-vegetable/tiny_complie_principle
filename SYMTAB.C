@@ -128,7 +128,11 @@ void printSymTab(FILE * listing)
       { LineList t = l->lines;
         fprintf(listing,"%-14s ",l->name);
         fprintf(listing,"%-8d  ",l->memloc);
-        fprintf(listing,"%-5s  ",l->type);
+        switch(l->type){
+          case INT:fprintf(listing,"%4s ","int"); break; 
+          case CHAR:fprintf(listing,"%4s ","char");  break;
+          default: break;
+		}
         while (t != NULL)
         { fprintf(listing,"%4d ",t->lineno);
           t = t->next;

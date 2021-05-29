@@ -146,10 +146,10 @@ void printTree(TreeNode * tree )
           fprintf(listing,"Write\n");
           break;
         case CharK:
-          fprintf(listing,"Char\n");
+          fprintf(listing,"Char: %s\n",tree->attr.name);
           break;
         case IntK:
-          fprintf(listing,"Int\n");
+          fprintf(listing,"Int: %s\n",tree->attr.name);
           break;
         default:
           fprintf(listing,"Unknown ExpNode kind\n");

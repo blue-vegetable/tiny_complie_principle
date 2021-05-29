@@ -38,7 +38,9 @@ typedef enum {
    /* RR instructions */
    opHALT,    /* RR     halt, operands are ignored */
    opIN,      /* RR     read into reg(r); s and t are ignored */
+   opINC,
    opOUT,     /* RR     write from reg(r), s and t are ignored */
+   opOUTC,
    opADD,    /* RR     reg(r) = reg(s)+reg(t) */
    opSUB,    /* RR     reg(r) = reg(s)-reg(t) */
    opMUL,    /* RR     reg(r) = reg(s)*reg(t) */
@@ -88,7 +90,7 @@ int dMem [DADDR_SIZE];
 int reg [NO_REGS];
 
 char * opCodeTab[]
-        = {"HALT","IN","OUT","ADD","SUB","MUL","DIV","????",
+        = {"HALT","IN","INC","OUT","OUTC","ADD","SUB","MUL","DIV","????",
             /* RR opcodes */
            "LD","ST","????", /* RM opcodes */
            "LDA","LDC","JLT","JLE","JGT","JGE","JEQ","JNE","????"
@@ -254,7 +256,7 @@ int readInstructions (void)
       op = opHALT ;
       while ((op < opRALim)
              && (strncmp(opCodeTab[op], word, 4) != 0) )
-          op++ ;
+          op += 1 ;
       if (strncmp(opCodeTab[op], word, 4) != 0)
           return error("Illegal opcode", lineNo,loc);
       switch ( opClass(op) )
@@ -339,7 +341,7 @@ STEPRESULT stepTM (void)
       m = currentinstruction.iarg2 + reg[s] ;
       break;
   } /* case */
-
+  char temp;
   switch ( currentinstruction.iop)
   { /* RR instructions */
     case opHALT :
@@ -363,10 +365,23 @@ STEPRESULT stepTM (void)
       }
       while (! ok);
       break;
+      
+      case opINC :
+      	printf("Enter value for INC instruction: ") ;
+        fflush (stdin);
+        fflush (stdout);
+        temp = getchar();
+        reg[r] = (int) temp;
+        break;
 
     case opOUT :  
       printf ("OUT instruction prints: %d\n", reg[r] ) ;
       break;
+      
+    case opOUTC :  
+      printf ("OUT instruction prints(char): %c\n", reg[r]) ;
+      break;
+      
     case opADD :  reg[r] = reg[s] + reg[t] ;  break;
     case opSUB :  reg[r] = reg[s] - reg[t] ;  break;
     case opMUL :  reg[r] = reg[s] * reg[t] ;  break;
@@ -584,3 +599,4 @@ main( int argc, char * argv[] )
   printf("Simulation done.\n");
   return 0;
 }
+
