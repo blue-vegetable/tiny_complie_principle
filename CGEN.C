@@ -92,9 +92,17 @@ static void genStmt( TreeNode * tree)
       case WriteK:
          /* generate code for expression to write */
          cGen(tree->child[0]);
-         /* now output it */
-         emitRO("OUT",ac,0,0,"write ac");
+         temp = get_type(tree->child[0]->attr.name);
+         /* now output it */	
+         if(temp == INT){
+         	emitRO("OUT",ac,0,0,"write ac");
+		 } else{
+		 	emitRO("OUTC",ac,0,0,"write ac");
+		 }
          break;
+         
+         
+         
       default:
          break;
     }
