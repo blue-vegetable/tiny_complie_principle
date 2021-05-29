@@ -13,6 +13,7 @@
 #include <string.h>
 #include "symtab.h"
 
+
 /* SIZE is the size of the hash table */
 #define SIZE 211
 
@@ -49,7 +50,8 @@ typedef struct BucketListRec
    { char * name;
      LineList lines;
      int memloc ; /* memory location for variable */
-     struct BucketListRec * next;
+     TokenType type;
+	 struct BucketListRec * next;
    } * BucketList;
 
 /* the hash table */
@@ -60,7 +62,7 @@ static BucketList hashTable[SIZE];
  * loc = memory location is inserted only the
  * first time, otherwise ignored
  */
-void st_insert( char * name, int lineno, int loc )
+void st_insert( char * name, int lineno, int loc, TokenType type)
 { int h = hash(name);
   BucketList l =  hashTable[h];
   while ((l != NULL) && (strcmp(name,l->name) != 0))
@@ -71,6 +73,7 @@ void st_insert( char * name, int lineno, int loc )
     l->lines = (LineList) malloc(sizeof(struct LineListRec));
     l->lines->lineno = lineno;
     l->memloc = loc;
+    l->type = type;
     l->lines->next = NULL;
     l->next = hashTable[h];
     hashTable[h] = l; }
@@ -86,14 +89,29 @@ void st_insert( char * name, int lineno, int loc )
 /* Function st_lookup returns the memory 
  * location of a variable or -1 if not found
  */
-int st_lookup ( char * name )
+int st_lookup (char * name)
 { int h = hash(name);
   BucketList l =  hashTable[h];
   while ((l != NULL) && (strcmp(name,l->name) != 0))
     l = l->next;
   if (l == NULL) return -1;
-  else return l->memloc;
+  else 
+  	return l->memloc;
 }
+
+
+/* Function get_tpye returns the type 
+ */
+int get_type (char * name)
+{ int h = hash(name);
+  BucketList l =  hashTable[h];
+  while ((l != NULL) && (strcmp(name,l->name) != 0))
+    l = l->next;
+  if (l == NULL) return -1;
+  else 
+  	return l->type;
+}
+
 
 /* Procedure printSymTab prints a formatted 
  * listing of the symbol table contents 
@@ -101,8 +119,8 @@ int st_lookup ( char * name )
  */
 void printSymTab(FILE * listing)
 { int i;
-  fprintf(listing,"Variable Name  Location   Line Numbers\n");
-  fprintf(listing,"-------------  --------   ------------\n");
+  fprintf(listing,"Variable Name  Location  Type  Line Numbers\n");
+  fprintf(listing,"-------------  --------  ----  ------------\n");
   for (i=0;i<SIZE;++i)
   { if (hashTable[i] != NULL)
     { BucketList l = hashTable[i];
@@ -110,6 +128,7 @@ void printSymTab(FILE * listing)
       { LineList t = l->lines;
         fprintf(listing,"%-14s ",l->name);
         fprintf(listing,"%-8d  ",l->memloc);
+        fprintf(listing,"%-5s  ",l->type);
         while (t != NULL)
         { fprintf(listing,"%4d ",t->lineno);
           t = t->next;

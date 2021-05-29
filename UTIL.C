@@ -21,6 +21,8 @@ void printToken( TokenType token, const char* tokenString )
     case REPEAT:
     case UNTIL:
     case READ:
+    case CHAR:
+    case INT:
     case WRITE: fprintf(listing, "reserved word: %s\n",tokenString); break;
     case ASSIGN: fprintf(listing,":=\n"); break;
     case LT: fprintf(listing,"<\n"); break;
@@ -45,8 +47,6 @@ void printToken( TokenType token, const char* tokenString )
       fprintf(listing,
           "ERROR: %s\n",tokenString);
       break;
-    case INT: fprintf(listing,"int\n");break;
-    case CHAR: fprintf(listing,"char\n");break;
     default: /* should never happen */
       fprintf(listing,"Unknown token: %d\n",token);
   }
@@ -123,7 +123,7 @@ static void printSpaces(void)
 /* procedure printTree prints a syntax tree to the 
  * listing file using indentation to indicate subtrees
  */
-void printTree( TreeNode * tree )
+void printTree(TreeNode * tree )
 { int i;
   INDENT;
   while (tree != NULL) {
@@ -144,6 +144,12 @@ void printTree( TreeNode * tree )
           break;
         case WriteK:
           fprintf(listing,"Write\n");
+          break;
+        case CharK:
+          fprintf(listing,"Char\n");
+          break;
+        case IntK:
+          fprintf(listing,"Int\n");
           break;
         default:
           fprintf(listing,"Unknown ExpNode kind\n");

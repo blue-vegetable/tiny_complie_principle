@@ -10,8 +10,11 @@
 #include "symtab.h"
 #include "analyze.h"
 
+static void nameError(TreeNode * t, char * message);
+
 /* counter for variable memory locations */
 static int location = 0;
+
 
 /* Procedure traverse is a generic recursive 
  * syntax tree traversal routine:
@@ -46,18 +49,35 @@ static void nullProc(TreeNode * t)
  * the symbol table 
  */
 static void insertNode( TreeNode * t)
-{ switch (t->nodekind)
+{ 
+  switch (t->nodekind)
   { case StmtK:
       switch (t->kind.stmt)
-      { case AssignK:
+      { 
+	    case IntK:
+	      if(st_lookup(t->attr.name) == -1)
+	      	st_insert(t->attr.name,t->lineno,location++,INT);
+	      else
+	      	nameError(t,"redeclaration of identifier");
+	      break;
+	      
+	    case CharK:
+	      if(st_lookup(t->attr.name) == -1)
+	      	st_insert(t->attr.name,t->lineno,location++,CHAR);
+	      else
+	      	nameError(t,"redeclaration of identifier");
+	      break;
+	    
+	    
+	    case AssignK:
         case ReadK:
           if (st_lookup(t->attr.name) == -1)
           /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno,location++);
+            nameError(t,"identifier undeclared");
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,0);
+            st_insert(t->attr.name,t->lineno,location++,ID);
           break;
         default:
           break;
@@ -68,11 +88,11 @@ static void insertNode( TreeNode * t)
       { case IdK:
           if (st_lookup(t->attr.name) == -1)
           /* not yet in table, so treat as new definition */
-            st_insert(t->attr.name,t->lineno,location++);
+            st_insert(t->attr.name,t->lineno,location++,ID);
           else
           /* already in table, so ignore location, 
              add line number of use only */ 
-            st_insert(t->attr.name,t->lineno,0);
+            st_insert(t->attr.name,t->lineno,0,ID);
           break;
         default:
           break;
@@ -94,10 +114,18 @@ void buildSymtab(TreeNode * syntaxTree)
   }
 }
 
+/* functions to throw out errors */
 static void typeError(TreeNode * t, char * message)
 { fprintf(listing,"Type error at line %d: %s\n",t->lineno,message);
   Error = TRUE;
 }
+
+static void nameError(TreeNode * t, char * message)
+{
+  fprintf(listing,"Name error at line %d: %s\n",t->lineno,message);
+  Error = TRUE;
+}
+
 
 /* Procedure checkNode performs
  * type checking at a single tree node
