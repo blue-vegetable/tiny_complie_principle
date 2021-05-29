@@ -175,6 +175,11 @@ TokenType getToken(void)
            state = DONE;
            currentToken = NUM;
          }
+         if(tokenString[0] == '0' && tokenStringIndex > 1){
+         	ungetNextChar();
+            save = FALSE;
+            currentToken = ERROR;
+		 }
          break;
        case INID:
          if (!isalpha(c)&&!isdigit(c))
