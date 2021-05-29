@@ -116,9 +116,15 @@ TokenType getToken(void)
                currentToken = LT;
                break;
              case '+':
+               if(currentToken==ASSIGN){  
+				   state = INNUM;
+			   } else 
                currentToken = PLUS;
                break;
              case '-':
+             	if(currentToken==ASSIGN){
+				   state = INNUM;
+			   } else 
                currentToken = MINUS;
                break;
              case '*':
