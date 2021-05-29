@@ -1,4 +1,11 @@
-char x;
-read x;
-x := x+1;
-write x;
+int x;
+int fact123;
+read x; { input an integer }
+if 0 < x then { don't compute if x <= 0 }
+  fact123 := 1;
+  repeat
+    fact123 := fact123 * x;
+    x := x - 1
+  until x = 0;
+  write fact123  { output factorial of x }
+end
