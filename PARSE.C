@@ -47,13 +47,14 @@ static void match(TokenType expected)
 
 TreeNode * stmt_sequence(void)
 { TreeNode * t = statement();
+  match(SEMI);
   TreeNode * p = t;
   while ((token!=ENDFILE) && (token!=END) &&
          (token!=ELSE) && (token!=UNTIL))
   { TreeNode * q;
-    match(SEMI);
     q = statement();
     if (q!=NULL) {
+      match(SEMI);
       if (t==NULL) t = p = q;
       else /* now p cannot be NULL either */
       { p->sibling = q;
@@ -132,6 +133,7 @@ TreeNode *declaration(void){
 			t->attr.name= copyString(tokenString);
 			t->type=Integer;
 			match(ID);
+			match(SEMI);
 			break;
 		case CHAR:
 			t = newStmtNode(CharK);
@@ -139,6 +141,7 @@ TreeNode *declaration(void){
 			t->attr.name= copyString(tokenString);
 			t->type = Character;
 			match(ID);
+			match(SEMI);
 			break; 
 		default:
 			break;
@@ -149,9 +152,8 @@ TreeNode *declaration(void){
 TreeNode *declaration_list(void){
 	TreeNode * t =  declaration();
 	TreeNode * p = t;
-	while(token == SEMI){
+	while(token == CHAR || token == INT){
 		TreeNode *q;
-		match(SEMI);
 		q = declaration();
 		if(q!=NULL){
 			if(t == NULL) {
@@ -164,7 +166,6 @@ TreeNode *declaration_list(void){
 	}
 	return t;
 }
-
 
 TreeNode * write_stmt(void)
 { TreeNode * t = newStmtNode(WriteK);
@@ -261,7 +262,7 @@ TreeNode * parse(void)
   if(t!=NULL){              // here regard declaration stmt and stmt-sequence as the same process
   	TreeNode* p = t;
   	while(p->sibling!=NULL) p = p->sibling;
-  	p->sibling = stmt_sequence();
+  	p->sibling = stmt_sequence(); 	
   } else {
   	t = stmt_sequence();
   }
