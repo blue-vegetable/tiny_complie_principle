@@ -35,8 +35,9 @@ static void syntaxError(char * message)
 }
 
 static void match(TokenType expected)
-{ if (token == expected) token = getToken();
+{ if (token == expected) token = getToken(token);
   else {
+  	printf("token expected:%d",expected);
     syntaxError("unexpected token -> ");
     printToken(token,tokenString);
     fprintf(listing,"      ");
@@ -74,7 +75,7 @@ TreeNode * statement(void)
     case ENDFILE: break;
     default : syntaxError("(in stmt)unexpected token -> ");
               printToken(token,tokenString);
-              token = getToken();
+              token = getToken(token);
               break;
   } /* end case */
   return t;
@@ -174,7 +175,7 @@ TreeNode * write_stmt(void)
 
 TreeNode * exp(void)
 { TreeNode * t = simple_exp();
-  if ((token==LT)||(token==EQ)) {
+  if ((token==LT)||(token==EQ) ||(token == GT)) {
     TreeNode * p = newExpNode(OpK);
     if (p!=NULL) {
       p->child[0] = t;
@@ -241,7 +242,7 @@ TreeNode * factor(void)
     default:
       syntaxError("unexpected token -> ");
       printToken(token,tokenString);
-      token = getToken();
+      token = getToken(token);
       break;
     }
   return t;
@@ -255,7 +256,7 @@ TreeNode * factor(void)
  */
 TreeNode * parse(void)
 { TreeNode * t;
-  token = getToken();
+  token = getToken(token);
   t = declaration_list();
   if(t!=NULL){              // here regard declaration stmt and stmt-sequence as the same process
   	TreeNode* p = t;
