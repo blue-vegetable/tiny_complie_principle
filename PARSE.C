@@ -104,7 +104,7 @@ TreeNode * repeat_stmt(void)
   match(REPEAT);
   if (t!=NULL) t->child[0] = stmt_sequence();
   match(UNTIL);
-  if (t!=NULL) t->child[1] = exp();
+  if (t!=NULL) t->child[1] = bool_exp();
   return t;
 }
 
