@@ -28,6 +28,8 @@ static TreeNode * simple_exp(void);
 static TreeNode * term(void);
 static TreeNode * factor(void);
 static TreeNode * bool_exp(void);
+static TreeNode * bool_exp_and(void);
+static TreeNode * bool_exp_first(void);
 
 static void syntaxError(char * message)
 { fprintf(listing,"\n>>> ");
@@ -176,16 +178,44 @@ TreeNode * write_stmt(void)
 }
 
 TreeNode * bool_exp(void){
-	TreeNode *t = exp();
-	while(token == AND || token == OR){
+	TreeNode *t = bool_exp_and();
+	while(token == OR){
 		TreeNode * p = newExpNode(BoolK);
 		if(p!=NULL){
 			p->child[0] = t;
 			p->attr.op = token;
 			t = p;
 			match(token);
-			t->child[1] = exp();
+			t->child[1] = bool_exp_and();
 		} 
+	}
+	return t;
+}
+
+TreeNode * bool_exp_and(void){
+	TreeNode * t = bool_exp_first();
+	while(token == AND){
+		TreeNode *p = newExpNode(BoolK);
+		if(p!=NULL){
+			p->child[0] = t;
+			p->attr.op = token;
+			t = p;
+			match(token);
+			t->child[1] = bool_exp_first();
+		}
+	}
+	return t;
+}
+
+
+TreeNode * bool_exp_first(void){
+	TreeNode * t =  NULL;
+	if (token == LPAREN){
+		match(LPAREN);
+		t = bool_exp();
+		match(RPAREN);
+	} else {
+		t = exp();
 	}
 	return t;
 }
@@ -270,16 +300,19 @@ TreeNode * factor(void)
 /* the primary function of the parser   */
 /****************************************/
 /* Function parse returns the newly 
+
  * constructed syntax tree
- */
+   */
 TreeNode * parse(void)
-{ TreeNode * t;
-  token = getToken(token);
-  t = declaration_list();
-  if(t!=NULL){              // here regard declaration stmt and stmt-sequence as the same process
+   { TreeNode * t;
+     token = getToken(token);
+     t = declaration_list();
+     if(t!=NULL){              // here regard declaration stmt and stmt-sequence as the same process
+
   	TreeNode* p = t;
   	while(p->sibling!=NULL) p = p->sibling;
   	p->sibling = stmt_sequence(); 	
+
   } else {
   	t = stmt_sequence();
   }

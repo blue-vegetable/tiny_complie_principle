@@ -187,15 +187,17 @@ static void genExp( TreeNode * tree)
 		emitRM("LDA",ac2,0,ac,"store the first bool value to reg[ac2]");
 		cGen(p2);
 		emitRO("ADD",ac2,ac,ac2,"add two bool results to reg[ac2]");
-		emitRM("LDC",ac,1,ac,"set reg[ac] to 1 to sub reg[ac2] ");
-		emitRM("LDA",ac,0,ac2,"put reg[ac2] into reg[ac1]");
 		switch(tree->attr.op){
 			case OR:
+				emitRM("LDA",ac,0,ac2,"put reg[ac2] into reg[ac]");
 				break;
 			case AND:
-				emitRM("LDC",ac,2,ac,"set reg[ac] to 1 to sub reg[ac2] ");
-				emitRO("SUB",ac2,ac2,ac,"ac2 from 2 to 1 then it is enough for and");
-				emitRM("LDA",ac,0,ac2,"put reg[ac2] into reg[ac1]");
+				emitRM("LDC",ac,2,ac,"set reg[ac] to 2 to sub reg[ac2] ");
+				emitRO("SUB",ac,ac2,ac,"ac2 from 2 to 0 then and is true");
+				emitRM("JNE",ac,2,pc,"if ac is zero ,then make it not zero");
+				emitRM("LDC",ac,1,0,"make reg[ac] non-zero");
+				emitRM("LDA",pc,1,pc,"unconditional jmp") ;
+				emitRM("LDC",ac,0,0,"make reg[ac] zero");
 				break;
 			default:printf("op is error");		
 		}
