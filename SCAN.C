@@ -58,7 +58,7 @@ static struct
     } reservedWords[MAXRESERVED]
    = {{"if",IF},{"then",THEN},{"else",ELSE},{"end",END},
       {"repeat",REPEAT},{"until",UNTIL},{"read",READ},
-      {"write",WRITE},{"int",INT},{"char",CHAR}};
+      {"write",WRITE},{"int",INT},{"char",CHAR},{"or",OR},{"and",AND}};
 
 /* lookup an identifier to see if it is a reserved word */
 /* uses linear search */

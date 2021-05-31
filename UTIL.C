@@ -24,6 +24,8 @@ void printToken( TokenType token, const char* tokenString )
     case CHAR:
     case INT:
     case WRITE: fprintf(listing, "reserved word: %s\n",tokenString); break;
+    case OR: fprintf(listing,"or\n"); break;
+	case AND: fprintf(listing,"and\n"); break;
     case ASSIGN: fprintf(listing,":=\n"); break;
     case LT: fprintf(listing,"<\n"); break;
     case GT: fprintf(listing,">\n"); break;
@@ -168,6 +170,10 @@ void printTree(TreeNode * tree )
           break;
         case IdK:
           fprintf(listing,"Id: %s\n",tree->attr.name);
+          break;
+        case BoolK:
+          fprintf(listing,"Bool_Op: ");
+          printToken(tree->attr.op,"\0");
           break;
         default:
           fprintf(listing,"Unknown ExpNode kind\n");

@@ -38,9 +38,9 @@ typedef enum {
    /* RR instructions */
    opHALT,    /* RR     halt, operands are ignored */
    opIN,      /* RR     read into reg(r); s and t are ignored */
-   opINC,
+   opINC,     /* RR     read a char into reg(r);*/
    opOUT,     /* RR     write from reg(r), s and t are ignored */
-   opOUTC,
+   opOUTC,    /* RR     write a char from reg(r), s and t are ignored */ 
    opADD,    /* RR     reg(r) = reg(s)+reg(t) */
    opSUB,    /* RR     reg(r) = reg(s)-reg(t) */
    opMUL,    /* RR     reg(r) = reg(s)*reg(t) */
@@ -235,7 +235,7 @@ int readInstructions (void)
     iMem[loc].iarg2 = 0 ;
     iMem[loc].iarg3 = 0 ;
   }
-  lineNo = 0 ;
+  lineNo = 0 ;                     // initialize here
   while (! feof(pgm))
   { fgets( in_Line, LINESIZE-2, pgm  ) ;
     inCol = 0 ; 

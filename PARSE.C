@@ -27,6 +27,7 @@ static TreeNode * exp(void);
 static TreeNode * simple_exp(void);
 static TreeNode * term(void);
 static TreeNode * factor(void);
+static TreeNode * bool_exp(void);
 
 static void syntaxError(char * message)
 { fprintf(listing,"\n>>> ");
@@ -85,7 +86,7 @@ TreeNode * statement(void)
 TreeNode * if_stmt(void)
 { TreeNode * t = newStmtNode(IfK);
   match(IF);
-  if (t!=NULL) t->child[0] = exp();
+  if (t!=NULL) t->child[0] = bool_exp();
   match(THEN);
   if (t!=NULL) t->child[1] = stmt_sequence();
   if (token==ELSE) {
@@ -173,6 +174,22 @@ TreeNode * write_stmt(void)
   if (t!=NULL) t->child[0] = exp();
   return t;
 }
+
+TreeNode * bool_exp(void){
+	TreeNode *t = exp();
+	while(token == AND || token == OR){
+		TreeNode * p = newExpNode(BoolK);
+		if(p!=NULL){
+			p->child[0] = t;
+			p->attr.op = token;
+			t = p;
+			match(token);
+			t->child[1] = exp();
+		} 
+	}
+	return t;
+}
+
 
 TreeNode * exp(void)
 { TreeNode * t = simple_exp();

@@ -101,8 +101,6 @@ static void genStmt( TreeNode * tree)
 		 }
          break;
          
-         
-         
       default:
          break;
     }
@@ -180,6 +178,29 @@ static void genExp( TreeNode * tree)
          } /* case op */
          if (TraceCode)  emitComment("<- Op") ;
          break; /* OpK */
+
+	case BoolK:
+		if(TraceCode) emitComment("-> Bool");
+		p1 = tree->child[0];
+		p2 = tree->child[1];
+		cGen(p1);
+		emitRM("LDA",ac2,0,ac,"store the first bool value to reg[ac2]");
+		cGen(p2);
+		emitRO("ADD",ac2,ac,ac2,"add two bool results to reg[ac2]");
+		emitRM("LDC",ac,1,ac,"set reg[ac] to 1 to sub reg[ac2] ");
+		emitRM("LDA",ac,0,ac2,"put reg[ac2] into reg[ac1]");
+		switch(tree->attr.op){
+			case OR:
+				break;
+			case AND:
+				emitRM("LDC",ac,2,ac,"set reg[ac] to 1 to sub reg[ac2] ");
+				emitRO("SUB",ac2,ac2,ac,"ac2 from 2 to 1 then it is enough for and");
+				emitRM("LDA",ac,0,ac2,"put reg[ac2] into reg[ac1]");
+				break;
+			default:printf("op is error");		
+		}
+		if (TraceCode)  emitComment("<- Bool") ;
+		
 
     default:
       break;

@@ -29,6 +29,9 @@
 /* 2nd accumulator */
 #define  ac1 1
 
+/* used for bool calculate */
+#define  ac2 2
+
 /* code emitting utilities */
 
 /* Procedure emitComment prints a comment line 
