@@ -184,6 +184,8 @@ TokenType getToken(TokenType preToken)
          	ungetNextChar();
             save = FALSE;
             currentToken = ERROR;
+            fprintf(listing,"ERROR , number is wrong");
+            exit(0);
 		 }
          break;
        case INID:

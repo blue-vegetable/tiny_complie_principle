@@ -1,0 +1,10 @@
+int x1;
+x1 := -1;
+write x1;
+x1 := +1;
+write x1;
+x1 := 0;
+write x1;
+x1 :=x1+-1;
+write x1;
+

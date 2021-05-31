@@ -1,0 +1,9 @@
+{ 这个文件用于测试 char和 int两种类型的读写}
+char x;
+int y;
+read x;
+read y;
+x := x+1;
+y := y+1;
+write x;
+write y;

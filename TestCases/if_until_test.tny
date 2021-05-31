@@ -1,0 +1,23 @@
+{测试if和until后的布尔运算}
+int x1;
+int x2; 
+char x3;
+x1 := 0;
+x2 := 1;
+x3 := 67;
+
+if (x1>0 or x2>0) and x1<10 then
+	x3 := x3+1;
+	write x3;
+else
+	x3 := x3+2;
+	write x3;
+end;
+
+x1 := 10;
+x2 := 0;
+repeat 
+   x1 := x1-1;
+   x2 := x2+1;
+   write x2;
+until x1<5 and x2 >6;
